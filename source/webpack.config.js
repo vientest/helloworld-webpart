@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 export default {
   entry: "./src/index.tsx",
   output: {
-    path: path.resolve(__dirname, "../dist"),
+    path: path.resolve(__dirname, "dist"),
     filename: "runtime.js",
     library: {
       type: "module"

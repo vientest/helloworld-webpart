@@ -1,14 +1,152 @@
 {
   "id": "21",
   "title": "HelloWorld Webpart",
-  "description": "Show hello world text and my name",
-  "summary": "Show hello world text",
+  "description": "Show hello world text in a polished SharePoint webpart experience.",
+  "summary": "Render a beautiful static Hello World interface with refined spacing, typography, color, and responsive presentation. No SharePoint data access is required.",
   "runtimeBehavior": {
-    "summary": "Show hello world text",
-    "features": [],
-    "uiStructure": [],
+    "summary": "Render a static, design-forward welcome panel that presents the Hello World message with a premium visual treatment, clear hierarchy, responsive layout, and accessible default states.",
+    "features": [
+      "Display the Hello World message as the primary visual focus",
+      "Use a polished panel layout with balanced whitespace, refined typography, and a restrained multi-color accent system",
+      "Provide supporting microcopy so the webpart feels intentional rather than bare",
+      "Adapt gracefully from wide SharePoint sections to narrow mobile layouts",
+      "Include clear empty, loading-free, and default states appropriate for a static webpart"
+    ],
+    "uiStructure": [
+      {
+        "id": "beautiful-hello-shell",
+        "type": "Section",
+        "title": "Beautiful Hello Shell",
+        "description": "A full-width responsive shell that centers the static greeting within a polished visual surface.",
+        "layout": {
+          "region": "main",
+          "direction": "vertical",
+          "density": "comfortable",
+          "width": "full"
+        },
+        "dataBinding": null,
+        "interactions": [],
+        "states": [
+          {
+            "name": "default",
+            "description": "The enhanced greeting composition is visible when the webpart loads."
+          },
+          {
+            "name": "narrow",
+            "description": "The layout stacks and tightens spacing on narrow SharePoint columns or mobile screens."
+          }
+        ],
+        "children": [
+          {
+            "id": "welcome-panel",
+            "type": "Panel",
+            "title": "Welcome Panel",
+            "description": "A refined surface with subtle depth, neutral background, and tasteful accent details.",
+            "layout": {
+              "region": "content",
+              "direction": "vertical",
+              "density": "comfortable",
+              "width": "full"
+            },
+            "dataBinding": null,
+            "interactions": [],
+            "states": [
+              {
+                "name": "default",
+                "description": "The panel frames the greeting without requiring user interaction."
+              }
+            ],
+            "children": [
+              {
+                "id": "eyebrow-label",
+                "type": "Text",
+                "title": "Eyebrow Label",
+                "description": "A compact label that introduces the webpart as a SharePoint welcome moment.",
+                "layout": {
+                  "region": "header",
+                  "direction": "horizontal",
+                  "density": "compact",
+                  "width": "auto"
+                },
+                "dataBinding": null,
+                "interactions": [],
+                "states": [],
+                "children": []
+              },
+              {
+                "id": "hello-world-heading",
+                "type": "Text",
+                "title": "Hello World Heading",
+                "description": "The main greeting, styled with strong hierarchy and polished typography.",
+                "layout": {
+                  "region": "body",
+                  "direction": "vertical",
+                  "density": "comfortable",
+                  "width": "full"
+                },
+                "dataBinding": null,
+                "interactions": [],
+                "states": [
+                  {
+                    "name": "default",
+                    "description": "The text reads \"Hello world\" and remains the dominant element."
+                  }
+                ],
+                "children": []
+              },
+              {
+                "id": "supporting-copy",
+                "type": "Text",
+                "title": "Supporting Copy",
+                "description": "Short secondary copy that makes the static greeting feel purposeful and complete.",
+                "layout": {
+                  "region": "body",
+                  "direction": "vertical",
+                  "density": "comfortable",
+                  "width": "full"
+                },
+                "dataBinding": null,
+                "interactions": [],
+                "states": [],
+                "children": []
+              },
+              {
+                "id": "accent-strip",
+                "type": "Decoration",
+                "title": "Accent Strip",
+                "description": "A small visual accent using coordinated teal, coral, and gold tones to add polish without overwhelming the message.",
+                "layout": {
+                  "region": "footer",
+                  "direction": "horizontal",
+                  "density": "compact",
+                  "width": "full"
+                },
+                "dataBinding": null,
+                "interactions": [],
+                "states": [],
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
     "dataOperations": []
   },
   "resources": [],
+  "proposedScreens": {
+    "version": 1,
+    "generatedAt": "2026-06-15T05:17:52.416Z",
+    "webpartId": "21",
+    "screens": [
+      {
+        "id": "beautiful-hello-default",
+        "order": 1,
+        "title": "Beautiful Hello World",
+        "description": "A polished static Hello World screen with elegant typography, balanced spacing, and subtle multi-color accents.",
+        "thumbnailPath": "design/previews/beautiful-hello-default.png"
+      }
+    ]
+  },
   "runtimeParameters": {}
 }
