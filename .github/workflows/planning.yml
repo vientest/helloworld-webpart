@@ -34,8 +34,9 @@ jobs:
         id: planning_needed
         shell: bash
         run: |
-          python <<'PY' >> "$GITHUB_OUTPUT"
+          python <<'PY'
           import json
+          import os
           from pathlib import Path
 
           def load_json(path: Path):
@@ -45,7 +46,7 @@ jobs:
               except (FileNotFoundError, json.JSONDecodeError):
                   return None
 
-          def non_empty_string(value):
+          def is_non_empty_string(value):
               return isinstance(value, str) and bool(value.strip())
 
           request = load_json(Path("context/input.json")) or {}
@@ -59,9 +60,9 @@ jobs:
               plan.get("id") == request_details.get("webpartId")
               and plan.get("title") == request_details.get("title")
               and plan.get("description") == request_details.get("description")
-              and non_empty_string(plan.get("summary"))
+              and is_non_empty_string(plan.get("summary"))
               and isinstance(plan.get("runtimeBehavior"), dict)
-              and non_empty_string(plan["runtimeBehavior"].get("summary"))
+              and is_non_empty_string(plan["runtimeBehavior"].get("summary"))
               and isinstance(plan.get("resources"), list)
               and isinstance(plan.get("runtimeParameters"), dict)
           )
@@ -80,8 +81,9 @@ jobs:
               else "planning workspace already matches an empty request"
           )
 
-          print(f"should_run={'true' if should_run else 'false'}")
-          print(f"reason={reason}")
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write(f"should_run={'true' if should_run else 'false'}\n")
+              output.write(f"reason={reason}\n")
           PY
 
       - name: Check OpenAI secret
