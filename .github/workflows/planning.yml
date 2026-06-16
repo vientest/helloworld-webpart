@@ -1,0 +1,81 @@
+name: OrcasStrike Planning
+
+on:
+  workflow_dispatch:
+    inputs:
+      webpartId:
+        description: Webpart definition id.
+        required: true
+      sessionId:
+        description: Planning session id.
+        required: true
+      planningBranch:
+        description: Branch containing the planning workspace.
+        required: true
+      correlationId:
+        description: WebAPI dispatch correlation id.
+        required: true
+
+run-name: Planning ${{ inputs.webpartId }} / ${{ inputs.sessionId }} / ${{ inputs.correlationId }}
+
+permissions:
+  contents: write
+
+jobs:
+  planning:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout planning workspace
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.planningBranch }}
+
+      - name: Check OpenAI secret
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY secret is not available to this repository." >&2
+            exit 1
+          fi
+
+      - name: Run Codex planning
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          sandbox: workspace-write
+          allow-bots: "true"
+          prompt: |
+            You are updating an OrcasStrike SPFx automation planning workspace.
+
+            Read:
+            - README.md
+            - context/input.json
+            - context/sharepoint-resources.json
+            - plan/details.schema.md
+            - design/proposed-screens.schema.md
+
+            Update only:
+            - plan/details.json
+            - design/proposed-screens.json
+            - design/previews/*
+
+            Do not modify runtime source, build output, workflow files, integration metadata, package files, or repository settings.
+            Do not invent SharePoint list columns that are not present in context/sharepoint-resources.json.
+            Preserve the runtime contract described in runtime-contract.md.
+            Create or refine the plan for the user message stored in context/input.json.
+
+      - name: Commit planning output
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add plan/details.json design/proposed-screens.json design/previews
+          if git diff --cached --quiet; then
+            echo "Codex did not produce planning output changes." >&2
+            exit 1
+          fi
+          git commit -m "Update planning output for ${{ inputs.webpartId }}"
+          git push origin "HEAD:${{ inputs.planningBranch }}"
