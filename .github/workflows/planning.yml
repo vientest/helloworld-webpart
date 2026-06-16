@@ -20,6 +20,7 @@ run-name: Planning ${{ inputs.webpartId }} / ${{ inputs.sessionId }} / ${{ input
 
 permissions:
   contents: write
+  models: read
 
 jobs:
   planning:
@@ -30,20 +31,12 @@ jobs:
         with:
           ref: ${{ inputs.planningBranch }}
 
-      - name: Check OpenAI secret
-        shell: bash
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          if [ -z "$OPENAI_API_KEY" ]; then
-            echo "OPENAI_API_KEY secret is not available to this repository." >&2
-            exit 1
-          fi
-
       - name: Run Codex planning
         uses: openai/codex-action@v1
         with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ github.token }}
+          responses-api-endpoint: https://models.inference.ai.azure.com/openai/v1/responses
+          model: gpt-4o
           sandbox: workspace-write
           allow-bots: "true"
           allow-bot-users: "spfxautomation[bot]"
