@@ -46,7 +46,7 @@ jobs:
               except (FileNotFoundError, json.JSONDecodeError):
                   return None
 
-          def is_non_empty_string(value):
+          def has_non_whitespace_content(value):
               return isinstance(value, str) and bool(value.strip())
 
           request = load_json(Path("context/input.json")) or {}
@@ -55,14 +55,15 @@ jobs:
 
           plan = load_json(Path("plan/details.json"))
           proposed_screens = load_json(Path("design/proposed-screens.json"))
+          runtime_behavior = plan.get("runtimeBehavior") if isinstance(plan, dict) else None
 
           plan_matches_request = isinstance(plan, dict) and (
               plan.get("id") == request_details.get("webpartId")
               and plan.get("title") == request_details.get("title")
               and plan.get("description") == request_details.get("description")
-              and is_non_empty_string(plan.get("summary"))
-              and isinstance(plan.get("runtimeBehavior"), dict)
-              and is_non_empty_string(plan["runtimeBehavior"].get("summary"))
+              and has_non_whitespace_content(plan.get("summary"))
+              and isinstance(runtime_behavior, dict)
+              and has_non_whitespace_content(runtime_behavior.get("summary"))
               and isinstance(plan.get("resources"), list)
               and isinstance(plan.get("runtimeParameters"), dict)
           )
