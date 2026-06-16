@@ -31,11 +31,24 @@ jobs:
         with:
           ref: ${{ inputs.planningBranch }}
 
+      - name: Configure Codex for GitHub Models
+        shell: bash
+        run: |
+          mkdir -p ~/.codex
+          cat > ~/.codex/config.toml << 'EOF'
+          model_provider = "github-models"
+
+          [model_providers.github-models]
+          name = "GitHub Models"
+          base_url = "https://models.inference.ai.azure.com/openai"
+          env_key = "GITHUB_TOKEN"
+          EOF
+
       - name: Run Codex planning
         uses: openai/codex-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          openai-api-key: ${{ github.token }}
-          responses-api-endpoint: https://models.inference.ai.azure.com/openai/v1/responses
           model: gpt-4o
           sandbox: workspace-write
           allow-bots: "true"
