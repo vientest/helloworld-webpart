@@ -1,7 +1,7 @@
 {
   "id": "21",
   "title": "HelloWorld Webpart",
-  "description": "Show hello world text and my name",
+  "description": "Show hello world text",
   "summary": "Show hello world text",
   "runtimeBehavior": {
     "summary": "Show hello world text",
